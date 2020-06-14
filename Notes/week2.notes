@@ -1,0 +1,96 @@
+Intro to Express:
+
+# Initialize a new node project
+Inside of you folder
+
+-npm init -y
+-npm install <dependicies> //like express for example
+
+Vocabulary:
+
+# Route
+    An event listener for HTTP requests
+
+# Endpoint
+    "/item" "/user"
+# Port
+
+Ports run processes, run my sever on a local Port
+stay above 3000 perferably not 3000 so 4000 for example and below 9000
+    - localhost: 4000/
+
+End
+
+
+Nodemon:
+    npm install -g nodemon
+
+    start server 
+
+    nodemon index.js
+
+    //instead of starting out node index.js
+
+
+
+
+
+Creating our first server using Express:
+
+**server.js** or you can call **index.js**
+
+//First Express Server
+
+const express = require('express')
+const app = express()
+
+    //1. Endpoint(mount path)
+    //2. Callback function
+app.get("/user", (request, response) => {
+    res.send({name: "joe", age: 20})
+})
+
+//app.put()
+//app.post()
+//add.delete()
+
+
+
+    // listen needs two arguements #1 PORT 2# CB
+app.listen(9000, () => {
+    console.log("The servcer is running on Port 900")
+})
+
+CTRL + C = ends process in terminal 
+
+WHen ready to run node server.js ///or index.js
+
+go to browser enter localhost:4000 // or localhost:4000/user
+
+
+
+
+Get request to our server in Postman:
+
+const express = require('express')
+const app = express()
+
+const users = [
+    {name: "joe", age: 29},
+    {name: "ann", age: 21},
+    {name: "ben", age: 26},
+    {name: "kelly", age: 24},
+    {name: "jen", age: 20}
+]
+
+app.get("/users", (request, response) => {
+    res.send(users)
+})
+
+
+app.listen(9000, () => {
+    console.log("The servcer is running on Port 900")
+})
+
+
+
