@@ -2,9 +2,9 @@ Intro to Express:
 
 # Initialize a new node project
 Inside of you folder
-
+EVERYTIME FOR EVERY PROJECT
 -npm init -y
--npm install <dependicies> //like express for example
+-npm install express <dependicies> //like express for example
 
 Vocabulary:
 

@@ -1,0 +1,196 @@
+# Intro to Express
+    # Initialize a new node project
+        - npm init -y
+        - npm install express     // dependencies
+! Make sure the main property in the package.json file matches your server file name.
+# Vocabulary
+    # Route
+        * An event listener for http requests
+    # Endpoint
+        * "/item"   "/user"
+    # Port
+        * localhost:9000/
+# Nodemon
+    * npm install -g nodemon    // -g stands for global and Nodemon is installed globally and doesnt need to be reinstalled everytime you create a server.
+    * type nodemon <server file.js> to start nodemon
+# Middleware 
+a function that fires on the in between before the response is sent out
+# Request Body (req.body)
+// Middleware (for every request)
+app.use(express.json()) // Looks for a request body and parses it
+# UUID - creates unique IDs
+    - npm install uuid  // Package is not global and needs to be installed for all servers created
+    - example: const { v4: uuidv4 } = require('uuid');
+    -          uuidv4();
+
+
+Request Body:
+
+#Middleware - a function that fires on the inbetween
+
+#Request Body (req.body) will parse JSON to JavaScript
+
+const express = require("express")
+const app = express()
+
+//Middleware(for every request)//
+app.use(express.json()) //looks for a request body, and turns it into 'req.body'
+
+//Fake Data//
+const movies = [
+    { title: "die hard", genre: "action" }
+   { title: "die hard", genre: "action" }
+   { title: "die hard", genre: "action" }
+   { title: "die hard", genre: "action" }
+]  
+
+app.get("/movies", (req, res) => {
+    res.send(movies)
+})
+
+app.post("/movies", (req, res) => {
+    const newMovie = req.body
+    movies.push(newMovie)
+    res.send(`Successfully added ${newMovie.title} to the database`)
+}
+
+
+app.listen(9000, () => {
+    console.loge("the server is running on Port 9000")
+})
+
+
+We Need IDs:
+
+#UUID - creates unique IDs
+-npm install uuid // installed per servcer NOT global
+
+
+
+
+const express = require("express")
+const app = express()
+const uuid = require("uuid/v4")
+
+//Middleware(for every request)//
+app.use(express.json()) //looks for a request body, and turns it into 'req.body'
+
+//Fake Data//
+const movies = [
+   { title: "die hard", genre: "action", _id: uuid()},
+   { title: "die hard", genre: "action", _id: uuid()},
+   { title: "die hard", genre: "action", _id: uuid()},
+   { title: "die hard", genre: "action", _id: uuid()}
+]
+
+app.get("/movies", (req, res) => {
+    res.send(movies)
+})
+
+app.post("/movies", (req, res) => {
+    const newMovie = req.body
+    newMovie._id = uuid()
+    movies.push(newMovie)
+    res.send(`Successfully added ${newMovie.title} to the database`)
+}
+
+
+app.listen(9000, () => {
+    console.loge("the server is running on Port 9000")
+})
+
+Express Router:
+
+INSTALL UUID -
+
+npm install uuid
+
+#Express Router - Enables to modularize our routes in express
+
+#Modular file organization
+
+**index.js**
+const express = require("express")
+const app = express()
+
+//Middleware(for every request)//
+app.use(express.json()) //looks for a request body, and turns it into 'req.body'
+
+//Routes
+app.use("/movies", require("./routes/movieRouter.js"))
+app.use("/tvshows", require("./routes/tvshowRouter.js"))
+
+//Server Listen
+app.listen(9000, () => {
+    console.log("the server is running on Port 9000")
+})
+
+
+**Routes Folder**
+
+**movieRouter.js**
+
+const express = require("express")
+const movieRouter = express.Router()
+const uuid = require("uuid/v4")
+
+const movies = [
+   { title: "die hard", genre: "action", _id: uuid()},
+   { title: "die hard", genre: "action", _id: uuid()},
+   { title: "die hard", genre: "action", _id: uuid()},
+   { title: "die hard", genre: "action", _id: uuid()}
+]
+
+//movieRouter.get("/", (req, res) => {
+  //  res.send(movies)
+//})
+
+//movieRouter.post("/", (req, res) => {
+  // const newMovie = req.body
+  //  newMovie._id = uuid()
+  //  movies.push(newMovie)
+ //   res.send(`Successfully added ${newMovie.title} to the database`)
+//}
+
+movieRouter.route("/")
+    .get((req, res) => {
+    res.send(movies)
+    })
+    .post((req, res) => {
+    const newMovie = req.body
+    newMovie._id = uuid()
+    movies.push(newMovie)
+    res.send(`Successfully added ${newMovie.title} to the database`)
+}
+
+//.put()
+//.delete()
+
+
+module.exports = movieRouter
+
+**tvshowRouter.js**
+
+const express = require("express")
+const tvshowRouter = express.Router()
+const uuid = require("uuid/v4")
+
+const tvShows = [
+   { title: "die hard", genre: "action", _id: uuid()},
+   { title: "die hard", genre: "action", _id: uuid()},
+   { title: "die hard", genre: "action", _id: uuid()},
+   { title: "die hard", genre: "action", _id: uuid()}
+]
+
+tvshowRouter.get("/", (req, res) => {
+    res.send(tvShows)
+})
+
+tvshowRouter.post("/", (req, res) => {
+    const newShow = req.body
+    newShow._id = uuid()
+    tvShows.push(newShow)
+    res.send(`Successfully added ${newShow.title} to the database`)
+})
+
+module.exports = tvshowRouter
