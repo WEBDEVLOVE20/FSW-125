@@ -38,6 +38,7 @@ const bounties = [
     }
 ];
 
+//Get & Post
 trackBounties.route("/")
     .get((req, res) => {
     res.send(bounties)
@@ -49,7 +50,24 @@ trackBounties.route("/")
     res.send(`Successfully added ${newBounty.firstName} ${newBounty.lastName} to the database!`)
 });
 
+//Delete
+trackBounties.delete("/:bountyId", (req, res) => {
+    const bountyId = req.params.bountyId
+    const bounty = req.body
+    bounty._id = uuidv4()
+    const bountyIndex = bounties.findIndex(bounty => bounty._id === bountyId)
+    bounties.splice(bountyIndex, 1)
+    res.send("Bounty was deleted!")
+})
 
-
+//Update - Put
+trackBounties.put("/:bountyId", (req, res) => {
+    const bountyId = req.params.bountyId
+    bounty = req.body
+    bounty._id = uuidv4()
+    const bountyIndex = bounties.findIndex(bounty => bounty._id === bountyId)
+    const updatedBounty = Object.assign(bounties[bountyIndex], req.body) 
+    res.send(updatedBounty)
+})
 
 module.exports = trackBounties

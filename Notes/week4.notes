@@ -1,0 +1,425 @@
+URL Parameters:
+
+#Parts of a URL
+    *Base - http://amazon.com
+    *Endpoint - http://amazon.com/images
+    *Parameter - http://amazon.com/images/5460646546 < some id number 
+    *Query - 
+
+#Parameters (req.params) - GET One
+
+
+
+**index.js**
+const express = require("express")
+const app = express()
+
+//Middleware(for every request)//
+app.use(express.json()) //looks for a request body, and turns it into 'req.body'
+
+//Routes
+app.use("/movies", require("./routes/movieRouter.js"))
+app.use("/tvshows", require("./routes/tvshowRouter.js"))
+
+//Server Listen
+app.listen(9000, () => {
+    console.log("the server is running on Port 9000")
+})
+
+
+**Routes Folder**
+
+**movieRouter.js**
+
+const express = require("express")
+const movieRouter = express.Router()
+const uuid = require("uuid/v4")
+
+const movies = [
+   { title: "die hard", genre: "action", _id: uuid()},
+   { title: "die hard", genre: "action", _id: uuid()},
+   { title: "die hard", genre: "action", _id: uuid()},
+   { title: "die hard", genre: "action", _id: uuid()}
+]
+
+//GET ALL
+movieRouter.get("/", (req, res) => {
+    res.send(movies)
+})
+
+//GET ONE
+movieRouter.get("/:movieId", (req, res) => {
+    const movieId = req.params.movieId
+    const foundMovie = movies.find(movie => movie._id === movieId)
+    res.send(foundMovie)
+})
+
+
+module.exports = movieRouter
+
+**tvshowRouter.js**
+
+const express = require("express")
+const tvshowRouter = express.Router()
+const uuid = require("uuid/v4")
+
+const tvShows = [
+   { title: "die hard", genre: "action", _id: uuid()},
+   { title: "die hard", genre: "action", _id: uuid()},
+   { title: "die hard", genre: "action", _id: uuid()},
+   { title: "die hard", genre: "action", _id: uuid()}
+]
+
+tvshowRouter.get("/", (req, res) => {
+    res.send(tvShows)
+})
+
+tvshowRouter.get("/:tvshowId", (req, res) => {
+    const tvShowId = req.params.tvshowId
+    const foundShow = tvShows.find(show => show._id === tvShowId)
+    res.send(foundShow)
+})
+
+tvshowRouter.post("/", (req, res) => {
+    const newShow = req.body
+    newShow._id = uuid()
+    tvShows.push(newShow)
+    res.send(`Successfully added ${newShow.title} to the database`)
+})
+
+module.exports = tvshowRouter
+
+URL Queries:
+
+#Query string - (typically to filter results)
+    *Begins with "?"
+    *Built of key=value pairs
+    *Multiple queries separated by the "&"
+
+
+**index.js**
+const express = require("express")
+const app = express()
+
+//Middleware(for every request)//
+app.use(express.json()) //looks for a request body, and turns it into 'req.body'
+
+//Routes
+app.use("/movies", require("./routes/movieRouter.js"))
+app.use("/tvshows", require("./routes/tvshowRouter.js"))
+
+//Server Listen
+app.listen(9000, () => {
+    console.log("the server is running on Port 9000")
+})
+
+
+**Routes Folder**
+
+**movieRouter.js**
+
+const express = require("express")
+const movieRouter = express.Router()
+const uuid = require("uuid/v4")
+
+const movies = [
+   { title: "die hard", genre: "action", _id: uuid()},
+   { title: "die hard", genre: "action", _id: uuid()},
+   { title: "die hard", genre: "action", _id: uuid()},
+   { title: "die hard", genre: "action", _id: uuid()}
+]
+
+//GET ALL
+movieRouter.get("/", (req, res) => {
+    res.send(movies)
+})
+
+//GET ONE
+movieRouter.get("/:movieId", (req, res) => {
+    const movieId = req.params.movieId
+    const foundMovie = movies.find(movie => movie._id === movieId)
+    res.send(foundMovie)
+})
+
+//GET BY GENRE
+movieRouter.get("/search/genre", (req, res) => {
+    const genre = req.query.genre
+    const filteredMovies = movies.filter(movie => movie.genre === genre)
+    res.send(filteredMovies)
+})
+
+
+module.exports = movieRouter
+
+**tvshowRouter.js**
+
+const express = require("express")
+const tvshowRouter = express.Router()
+const uuid = require("uuid/v4")
+
+const tvShows = [
+   { title: "die hard", genre: "action", _id: uuid()},
+   { title: "die hard", genre: "action", _id: uuid()},
+   { title: "die hard", genre: "action", _id: uuid()},
+   { title: "die hard", genre: "action", _id: uuid()}
+]
+
+tvshowRouter.get("/", (req, res) => {
+    res.send(tvShows)
+})
+
+tvshowRouter.get("/:tvshowId", (req, res) => {
+    const tvShowId = req.params.tvshowId
+    const foundShow = tvShows.find(show => show._id === tvShowId)
+    res.send(foundShow)
+})
+
+tvshowRouter.post("/", (req, res) => {
+    const newShow = req.body
+    newShow._id = uuid()
+    tvShows.push(newShow)
+    res.send(`Successfully added ${newShow.title} to the database`)
+})
+
+module.exports = tvshowRouter
+
+
+
+
+
+DELETE requests with Express:
+
+
+**index.js**
+const express = require("express")
+const app = express()
+
+//Middleware(for every request)//
+app.use(express.json()) //looks for a request body, and turns it into 'req.body'
+
+//Routes
+app.use("/movies", require("./routes/movieRouter.js"))
+app.use("/tvshows", require("./routes/tvshowRouter.js"))
+
+//Server Listen
+app.listen(9000, () => {
+    console.log("the server is running on Port 9000")
+})
+
+
+**Routes Folder**
+
+**movieRouter.js**
+
+const express = require("express")
+const movieRouter = express.Router()
+const uuid = require("uuid/v4")
+
+const movies = [
+   { title: "die hard", genre: "action", _id: uuid()},
+   { title: "die hard", genre: "action", _id: uuid()},
+   { title: "die hard", genre: "action", _id: uuid()},
+   { title: "die hard", genre: "action", _id: uuid()}
+]
+
+//GET ALL
+movieRouter.get("/", (req, res) => {
+    res.send(movies)
+})
+
+//GET ONE
+movieRouter.get("/:movieId", (req, res) => {
+    const movieId = req.params.movieId
+    const foundMovie = movies.find(movie => movie._id === movieId)
+    res.send(foundMovie)
+})
+
+//GET BY GENRE
+movieRouter.get("/search/genre", (req, res) => {
+    const genre = req.query.genre
+    const filteredMovies = movies.filter(movie => movie.genre === genre)
+    res.send(filteredMovies)
+})
+
+//DELETE ONE
+
+movieRouter.delete("/:movieId", (req, res) => {
+    const movieId = req.params.movieId
+    const movieIndex = movies.findIndex(movie => movie._id === movieId)
+    movies.splice(movieIndex, 1)
+    res.send("Sucessfully deleted movie")
+
+})
+
+module.exports = movieRouter
+
+**tvshowRouter.js**
+
+const express = require("express")
+const tvshowRouter = express.Router()
+const uuid = require("uuid/v4")
+
+const tvShows = [
+   { title: "die hard", genre: "action", _id: uuid()},
+   { title: "die hard", genre: "action", _id: uuid()},
+   { title: "die hard", genre: "action", _id: uuid()},
+   { title: "die hard", genre: "action", _id: uuid()}
+]
+
+//GET ALL
+tvshowRouter.get("/", (req, res) => {
+    res.send(tvShows)
+})
+
+
+//GET ONE
+tvshowRouter.get("/:tvshowId", (req, res) => {
+    const tvShowId = req.params.tvshowId
+    const foundShow = tvShows.find(show => show._id === tvShowId)
+    res.send(foundShow)
+})
+
+
+//Post One
+tvshowRouter.post("/", (req, res) => {
+    const newShow = req.body
+    newShow._id = uuid()
+    tvShows.push(newShow)
+    res.send(`Successfully added ${newShow.title} to the database`)
+})
+
+module.exports = tvshowRouter
+
+
+
+
+PUT requests with Express:
+
+
+**Routes Folder**
+
+**movieRouter.js**
+
+const express = require("express")
+const movieRouter = express.Router()
+const uuid = require("uuid/v4")
+
+const movies = [
+   { title: "die hard", genre: "action", _id: uuid()},
+   { title: "die hard", genre: "action", _id: uuid()},
+   { title: "die hard", genre: "action", _id: uuid()},
+   { title: "die hard", genre: "action", _id: uuid()}
+]
+
+//GET ALL
+movieRouter.get("/", (req, res) => {
+    res.send(movies)
+})
+
+//GET ONE
+movieRouter.get("/:movieId", (req, res) => {
+    const movieId = req.params.movieId
+    const foundMovie = movies.find(movie => movie._id === movieId)
+    res.send(foundMovie)
+})
+
+//GET BY GENRE
+movieRouter.get("/search/genre", (req, res) => {
+    const genre = req.query.genre
+    const filteredMovies = movies.filter(movie => movie.genre === genre)
+    res.send(filteredMovies)
+})
+
+//DELETE ONE
+
+movieRouter.delete("/:movieId", (req, res) => {
+    const movieId = req.params.movieId
+    const movieIndex = movies.findIndex(movie => movie._id === movieId)
+    movies.splice(movieIndex, 1)
+    res.send("Sucessfully deleted movie")
+
+})
+
+
+//UPDATE ONE
+movieRouter.put("./:movieId", (req, res) => {
+    const movieId = req.params.movieId
+    const movieIndex = movies.findIndex(movie => movie._id === movieId)
+    const updatedMovie = Object.assign(movies[movieIndex], req.body) //const updateObject = req.body
+    res.send(updatedMovie)
+})
+
+module.exports = movieRouter
+
+
+Middleware Introduction:
+
+#Middleware
+
+    #What is it?
+        - app.use()
+        //takes possibly two arguements
+        1. (optional) - Mount Path (endpoint)
+        2. Callback function - receives the request, response objects, also the 'next' function
+
+    #The "next" function
+        -moves on the the next middleware in line on our server
+
+
+    **index.js**
+
+const express = require("express")
+const app = express()
+const uuid = require("uuid/v4")
+
+//Middleware(for every request)//
+app.use(express.json()) //looks for a request body, and turns it into 'req.body'
+
+//Routes
+app.use("/items", (req, res, next) => {
+    console.log("The items middleware was executed")
+    next()
+    
+})
+(
+app.use(req, res, next) => {
+    req.body = { name: "Rick" }
+    next()
+    
+})
+
+app.get("./items", (req, res, next) => {
+    console.log("Get request received")
+    res.send("hello world")
+})
+//Server Listen
+app.listen(9000, () => {
+    console.log("the server is running on Port 9000")
+})
+
+
+INSTALL MORGAN:
+
+    #console errors in express
+
+    #Use a logger
+        *npm install morgan
+        **per project installation inside of project folder
+
+**index.js**
+
+const express = require("express")
+const app = express()
+
+//Middleware(for every request)//
+app.use(express.json()) //looks for a request body, and turns it into 'req.body'
+app.use(morgan('dev')) //Logs requests to the console.
+
+//Routes
+app.use("/movies", require("./routes/movieRouter.js"))
+app.use("/tvshows", require("./routes/tvshowRouter.js"))
+
+//Server Listen
+app.listen(9000, () => {
+    console.log("the server is running on Port 9000")
+})
