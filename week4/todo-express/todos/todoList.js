@@ -29,7 +29,7 @@ const todoItems = [
         name: "Dishes",
         description : "Wash, Rinse, Dry, Put Away",
         imageUrl: "https://images.unsplash.com/uploads/1413170239208ebba60a2/07d615e0?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60",
-        completed: false,
+        completed: true,
         _id: uuidv4()
     },
 ]
@@ -44,7 +44,7 @@ todoList.route("/")
     const newTodo = req.body
     newTodo._id = uuidv4()
     todoItems.push(newTodo)
-    res.send(`Successfully added ${newTodo.name} ${newTodo.description} ${newTodo.imageUrl} to the database!`)
+    res.send(`Successfully added ${newTodo.name} to the database!`)
 });
 
 //Get-Only One
@@ -63,7 +63,7 @@ todoList.delete("/:todoId", (req, res) => {
     todo._id = uuidv4()
     const todoIndex = todoItems.findIndex(todo => todo._id === todoId)
     todoItems.splice(todoIndex, 1)
-    res.send(`Todo ${todo.name} item was deleted!`)
+    res.send(`Todo List item was deleted!`)
 })
 
 //Update - Put
