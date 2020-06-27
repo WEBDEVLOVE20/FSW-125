@@ -3,6 +3,8 @@ const trackBounties = express.Router();
 const { v4: uuidv4 } = require('uuid');
 
 
+
+
 const bounties = [
     {
         firstName: "Jane",
@@ -63,7 +65,7 @@ trackBounties.delete("/:bountyId", (req, res) => {
 //Update - Put
 trackBounties.put("/:bountyId", (req, res) => {
     const bountyId = req.params.bountyId
-    bounty = req.body
+    const bounty = req.body
     bounty._id = uuidv4()
     const bountyIndex = bounties.findIndex(bounty => bounty._id === bountyId)
     const updatedBounty = Object.assign(bounties[bountyIndex], req.body) 
