@@ -408,7 +408,8 @@ INSTALL MORGAN:
 
 **index.js**
 
-const express = require("express")
+const express = require('express')
+const morgan = require('morgan')
 const app = express()
 
 //Middleware(for every request)//
