@@ -1,0 +1,467 @@
+Connecting the Front-end to the Back-end:
+
+#Folder Structure
+
+
+#Proxy
+
+1. Create Folder
+**client**
+
+2. npx create-react-app .
+
+3. Clear all files under src
+
+4. Create new index.js files
+
+import React from 'react'
+import ReactDom from 'react-dom'
+
+//axios.get("/movies") // we dont have to put whole url if we are using proxy it knows we are trying to talk to our server
+//axios.get("http://rickandmortyapi.com") //you can still reach outside apis but you will need to call the directly
+
+ReactDom.render(<h1></h1>, document.getElementById('root'))
+
+5. Under the client folder go the the package.json file enter below info at bottom
+
+,
+"proxy": "http://localhost:9000"
+
+6. + new terminal window make sure you are in express back end then type nodemon index.js
+
+7. Then switch back to react on up and down arrow and then type npm start
+
+//we have two server running 
+
+
+GET request in React:
+
+#In client folder
+
+npm install axios
+
+Add three new files in client folder //react
+
+**App.js**
+
+import React, { useState, useEffect } from 'react'
+import axios from 'axios'
+import Movie from './components/Movie.js'
+
+export default function App() {
+    const [movies, setMovies] = useState([])
+
+    useEffect(() => {
+        axios.get("/movies")
+            .then(res => setMovies(res.data))
+            .catch(err => console.log(err))
+            //.then(res => console.log(res))
+    }, [])
+
+    return (
+        <div>
+        { movies.map(movie => <Movie {...movie} key={movie.title}/>) } //key should usually be ID
+        </div>
+    )
+}
+
+components folder 
+
+**Movie.js**
+
+import React from 'react'
+
+export default function Movie(props){
+    const { title, genre, _id } = props
+
+    return (
+        <div>
+            <h1>Title: { title }</h1>
+            <p>Genre: { genre }</p> 
+        </div>
+    )
+}
+
+
+POST request in React:
+
+**App.js**
+
+import React, { useState, useEffect } from 'react'
+import axios from 'axios'
+import Movie from './components/Movie.js'
+import AddMovieForm from './components/AddMovieForm.js'
+
+export default function App() {
+    const [movies, setMovies] = useState([])
+
+
+    getMovies(() => {
+        axios.get("/movies")
+            .then(res => setMovies(res.data))
+            .catch(err => console.log(err))
+            //.then(res => console.log(res))
+    })
+
+    addMovie((newMovie) => {
+        axios.post("/movies", newMovie)
+            .then(res => {
+                setMovies(prevMovies => [...prevMovies, res.data])
+            })
+            .catch(err => console.log(err))
+    })
+
+    
+    useEffect(() => {
+        getMovies()
+    }, [])
+
+    return (
+        <div>
+        <AddMovieForm 
+            addMovie={addMovie}
+        />
+        { movies.map(movie => <Movie {...movie} key={movie.title}/>) } //key should usually be ID
+        </div>
+    )
+}
+
+
+
+
+**AddMovieForm.js**
+
+import React, { useState } from 'react'
+
+export default function AddMovieForm(props){
+
+    const initInputs = { title: "", genre: "" }
+    const [inputs, setInputs] = useState(initInputs)
+
+    handleChange((e) => {
+        const {name, value } = e.target
+        setInputs(prevInputs => ({...prevInputs, [name]: value}))
+    })
+    
+    handleSubmit((e) => {
+        e.preventDefault()
+        props.addMovie(inputs)
+        setInputs(initInputs)
+    })
+
+
+    return (
+        <form onSubmit={handleSubmit}>
+            <input
+                type="text"
+                name="title"
+                value={inputs.title}
+                onChange={handleChange}
+                placeholder="Title"
+            />
+            <input
+                type="text"
+                name="genre"
+                value={inputs.genre}
+                onChange={handleChange}
+                placeholder="Genre"
+            />
+            <button>Add Movie</button>
+        </form>
+    )
+}
+
+
+#In server file
+
+**movieRouter.js**
+
+const express = require("express")
+const movieRouter = express.Router()
+const uuid = require("uuid/v4")
+
+const movies = [
+   { title: "die hard", genre: "action", _id: uuid()},
+   { title: "die hard", genre: "action", _id: uuid()},
+   { title: "die hard", genre: "action", _id: uuid()},
+   { title: "die hard", genre: "action", _id: uuid()}
+]
+
+//GET ALL
+movieRouter.get("/", (req, res) => {
+    res.send(movies)
+})
+
+//GET ONE
+movieRouter.get("/:movieId", (req, res) => {
+    const movieId = req.params.movieId
+    const foundMovie = movies.find(movie => movie._id === movieId)
+    res.send(foundMovie)
+})
+
+//GET BY GENRE
+movieRouter.get("/search/genre", (req, res) => {
+    const genre = req.query.genre
+    const filteredMovies = movies.filter(movie => movie.genre === genre)
+    res.send(filteredMovies)
+})
+
+//POST ONE
+movieRouter.post("/", (req, res) => {
+    const newMovie = req.body
+    newMovie._id = uuid()
+    movies.push(newMovie)
+    res.send(newMovie)
+})
+
+//DELETE ONE
+movieRouter.delete("/:movieId", (req, res) => {
+    const movieId = req.params.movieId
+    const movieIndex = movies.findIndex(movie => movie._id === movieId)
+    movies.splice(movieIndex, 1)
+    res.send("Sucessfully deleted movie")
+
+})
+
+//UPDATE ONE
+movieRouter.put("./:movieId", (req, res) => {
+    const movieId = req.params.movieId
+    const movieIndex = movies.findIndex(movie => movie._id === movieId)
+    const updatedMovie = Object.assign(movies[movieIndex], req.body) //const updateObject = req.body
+    res.send(updatedMovie)
+})
+
+module.exports = movieRouter
+
+
+
+Delete request in React:
+
+
+**Movie.js**
+
+import React from 'react'
+
+export default function Movie(props){
+    const { title, genre, _id } = props
+
+    return (
+        <div>
+            <h1>Title: { title }</h1>
+            <p>Genre: { genre }</p>
+            <button
+            onClick={() => props.deleteMovie(_id)}>Delete</button> 
+        </div>
+    )
+}
+
+
+**App.js**
+
+import React, { useState, useEffect } from 'react'
+import axios from 'axios'
+import Movie from './components/Movie.js'
+import AddMovieForm from './components/AddMovieForm.js'
+
+export default function App() {
+    const [movies, setMovies] = useState([])
+
+
+    getMovies(() => {
+        axios.get("/movies")
+            .then(res => setMovies(res.data))
+            .catch(err => console.log(err))
+            //.then(res => console.log(res))
+    })
+
+    addMovie((newMovie) => {
+        axios.post("/movies", newMovie)
+            .then(res => {
+                setMovies(prevMovies => [...prevMovies, res.data])
+            })
+            .catch(err => console.log(err))
+    })
+
+    deleteMovie((movieId) => {
+        axios.delete(`/movies/${movieId}`)
+            .then(res => {
+                setMovies(prevMovies => prevMovies.filter(movie => movie._id !== movieId))
+            })
+            .catch(err => console.log(err))
+    })
+
+    
+    useEffect(() => {
+        getMovies()
+    }, [])
+
+    return (
+        <div>
+        <AddMovieForm 
+            addMovie={addMovie}
+        />
+        { movies.map(movie => 
+        <Movie 
+        {...movie} 
+        key={movie.title}
+        deleteMovie={deleteMovie}/>) } //key should usually be ID
+        </div>
+    )
+}
+
+
+PUT request in React:
+
+**Movie.js**
+
+import React, { useState } from 'react'
+import AddMovieForm from './AddMovieForm.js'
+
+export default function Movie(props){
+    const { title, genre, _id } = props
+    const [editToggle, setEditToggle] = useState(false)
+
+    return (
+        <div className="movie">
+        { !editToggle ?
+        <>
+            <h1>Title: { title }</h1>
+            <p>Genre: { genre }</p>
+            <button
+                onClick={() => props.deleteMovie(_id)}>
+                Delete
+            </button>
+            <button
+                className="edit-btn">
+                onClick={() => setEditToggle(prevToggle => !prevToggle)}
+                Edit
+            </button>
+        </>
+        :
+        <>
+            <AddMovieForm
+                title={title}
+                genre={genre}
+                -id={_id}
+                btnText="Submit Edit" 
+                submit={props.editMovie}
+            />
+            <button>
+                onClick={() => setEditToggle(prevToggle => !prevToggle)}
+                Close
+            </button>
+        </>
+        }
+        </div>
+    )
+}
+
+
+**App.js**
+
+import React, { useState, useEffect } from 'react'
+import axios from 'axios'
+import Movie from './components/Movie.js'
+import AddMovieForm from './components/AddMovieForm.js'
+
+export default function App() {
+    const [movies, setMovies] = useState([])
+
+
+    getMovies(() => {
+        axios.get("/movies")
+            .then(res => setMovies(res.data))
+            .catch(err => console.log(err))
+            //.then(res => console.log(res))
+    })
+
+    addMovie((newMovie) => {
+        axios.post("/movies", newMovie)
+            .then(res => {
+                setMovies(prevMovies => [...prevMovies, res.data])
+            })
+            .catch(err => console.log(err))
+    })
+
+    deleteMovie((movieId) => {
+        axios.delete(`/movies/${movieId}`)
+            .then(res => {
+                setMovies(prevMovies => prevMovies.filter(movie => movie._id !== movieId))
+            })
+            .catch(err => console.log(err))
+    })
+
+    editMovie((updates, movieId) => {
+        axios.put(`/movies/${movieId}`, updates)
+            .then(res => {
+                setMovies(prevMovies => prevMovies.map (movie => movie._id !== movieId ? movie : res.data))
+            })
+            .catch(err => console.log(err))
+    })
+
+    
+    useEffect(() => {
+        getMovies()
+    }, [])
+
+    return (
+        <div>
+        <AddMovieForm 
+            submit={addMovie}
+            btnText="Add Movie"
+        />
+        { 
+          movies.map(movie => 
+            <Movie 
+            {...movie} 
+            key={movie.title}
+            deleteMovie={deleteMovie}
+            editMovie={editMovie}
+            />) 
+        } //key should usually be ID
+        </div>
+    )
+}
+
+
+**AddMovieForm.js**
+
+import React, { useState } from 'react'
+
+export default function AddMovieForm(props){
+
+    const initInputs = { title: props.title || "", genre: props.genre || ""  }
+    const [inputs, setInputs] = useState(initInputs)
+
+    handleChange((e) => {
+        const {name, value } = e.target
+        setInputs(prevInputs => ({...prevInputs, [name]: value}))
+    })
+    
+    handleSubmit((e) => {
+        e.preventDefault()
+        props.submit(inputs, props._id)
+        setInputs(initInputs)
+    })
+
+
+    return (
+        <form onSubmit={handleSubmit}>
+            <input
+                type="text"
+                name="title"
+                value={inputs.title}
+                onChange={handleChange}
+                placeholder="Title"
+            />
+            <input
+                type="text"
+                name="genre"
+                value={inputs.genre}
+                onChange={handleChange}
+                placeholder="Genre"
+            />
+            <button>{ props.btnText }</button>
+        </form>
+    )
+}
