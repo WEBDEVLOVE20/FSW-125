@@ -1,37 +1,43 @@
 import React, { useState } from 'react'
-import AddMovieForm from './AddMovieForm.js'
+import './bounties.css'
+import AddBountyForm from './AddBountyForm.js'
 
-export default function Movie(props){
-    const { title, genre, _id } = props
+function Bounties(props){
+    const { firstName, lastName, bountyAmount, type, _id } = props
     const [editToggle, setEditToggle] = useState(false)
 
     return (
-        <div className="movie">
+        <div>
         { !editToggle ?
         <>
-            <h1>Title: { title }</h1>
-            <p>Genre: { genre }</p>
+            <h1>Name: { firstName } { lastName}</h1>
+            <h3>Bounty Price: ${ bountyAmount }</h3>
+            <h3>Jedi or Sith: { type }</h3>
             <button
-                onClick={() => props.deleteMovie(_id)}>
+                className="delete-btn"
+                onClick={() => props.deleteBounty(_id)}>
                 Delete
             </button>
             <button
-                className="edit-btn">
-                onClick={() => setEditToggle(prevToggle => !prevToggle)}
+                className="edit-btn"
+                onClick={() => setEditToggle(prevToggle => !prevToggle)}>
                 Edit
             </button>
         </>
         :
         <>
-            <AddMovieForm
-                title={title}
-                genre={genre}
+            <AddBountyForm
+                firstName={firstName}
+                lastName={lastName}
+                bountyAmount={bountyAmount}
+                type={type}
                 _id={_id}
                 btnText="Submit Edit" 
-                submit={props.editMovie}
+                submit={props.editBounty}
             />
-            <button>
-                onClick={() => setEditToggle(prevToggle => !prevToggle)}
+            <button
+                className="delete-btn"
+                onClick={() => setEditToggle(prevToggle => !prevToggle)}>
                 Close
             </button>
         </>
@@ -39,3 +45,5 @@ export default function Movie(props){
         </div>
     )
 }
+
+export default Bounties;

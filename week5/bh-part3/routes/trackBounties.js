@@ -47,7 +47,7 @@ trackBounties.route("/")
     const newBounty = req.body
     newBounty._id = uuidv4()
     bounties.push(newBounty)
-    res.send(`Successfully added ${newBounty.firstName} ${newBounty.lastName} to the database!`)
+    res.send(newBounty)
 });
 
 //Delete

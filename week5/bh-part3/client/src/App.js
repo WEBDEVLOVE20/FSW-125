@@ -1,63 +1,65 @@
 import React, { useState, useEffect } from 'react'
+import './App.css'
 import axios from 'axios'
 import Bounties from './components/Bounties.js'
-import AddMovieForm from './components/AddMovieForm.js'
+import AddBountyForm from './components/AddBountyForm.js'
 
 function App() {
-    const [movies, setMovies] = useState([])
+    const [bounties, setBounties] = useState([])
 
-
-    getMovies(() => {
-        axios.get("/movies")
-            .then(res => setMovies(res.data))
+    const getBounties = (() => {
+        axios.get("/bounties")
+            .then(res => setBounties(res.data))
             .catch(err => console.log(err))
-            //.then(res => console.log(res))
     })
 
-    addMovie((newMovie) => {
-        axios.post("/movies", newMovie)
+    const addBounty = ((newBounty) => {
+        axios.post("/bounties", newBounty)
             .then(res => {
-                setMovies(prevMovies => [...prevMovies, res.data])
+                setBounties(prevBounties => [...prevBounties, res.data])
             })
             .catch(err => console.log(err))
     })
 
-    deleteMovie((movieId) => {
-        axios.delete(`/movies/${movieId}`)
+    const deleteBounty = ((bountyId) => {
+        axios.delete(`/bounties/${bountyId}`)
             .then(res => {
-                setMovies(prevMovies => prevMovies.filter(movie => movie._id !== movieId))
+                setBounties(prevBounties => prevBounties.filter(bounty => bounty._id !== bountyId))
             })
             .catch(err => console.log(err))
     })
 
-    editMovie((updates, movieId) => {
-        axios.put(`/movies/${movieId}`, updates)
+    const editBounty = ((updates, bountyId) => {
+        axios.put(`/bounties/${bountyId}`, updates)
             .then(res => {
-                setMovies(prevMovies => prevMovies.map (movie => movie._id !== movieId ? movie : res.data))
+                setBounties(prevBounties => prevBounties.map (bounty => bounty._id !== bountyId ? bounty : res.data))
             })
             .catch(err => console.log(err))
     })
 
-    
     useEffect(() => {
-        getMovies()
+        getBounties()
     }, [])
 
     return (
         <div>
-        <AddMovieForm 
-            submit={addMovie}
-            btnText="Add Movie"
+        <AddBountyForm 
+            submit={addBounty}
+            btnText="Add Bounty"
         />
         { 
-          movies.map(movie => 
-            <Movie 
-            {...movie} 
-            key={movie.title}
-            deleteMovie={deleteMovie}
-            editMovie={editMovie}
+          bounties.map(bounty => 
+            <Bounties 
+            {...bounty} 
+            key={bounty._id}
+            firstName={bounty.firstName}
+            lastName={bounty.lastName}
+            bountyAmount={bounty.bountyAmount}
+            type={bounty.type}
+            deleteBounty={deleteBounty}
+            editBounty={editBounty}
             />) 
-        } //key should usually be ID
+        }
         </div>
     )
 }

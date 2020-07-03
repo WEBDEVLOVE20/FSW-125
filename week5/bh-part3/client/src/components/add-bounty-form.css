@@ -1,0 +1,16 @@
+input {
+    padding: 8px;
+    margin-right: 10px;
+    font-size: 15px;
+    border-radius: 7px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.add-btn {
+    font-size: 15px;
+    padding: 8px;
+    border-radius: 7px;
+    background-color: teal;
+    box-shadow: 3px 3px 2px grey;
+}

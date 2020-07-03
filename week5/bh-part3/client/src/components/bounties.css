@@ -1,0 +1,16 @@
+.edit-btn {
+    background-color: orange;
+    font-size: 18px;
+    box-shadow: 3px 3px 2px grey;
+    border-radius: 5px;
+    padding: 4px;
+}
+
+.delete-btn {
+    background-color: firebrick;
+    font-size: 18px;
+    margin-right: 20px;
+    box-shadow: 3px 3px 2px grey;
+    border-radius: 5px;
+    padding: 4px;
+}
