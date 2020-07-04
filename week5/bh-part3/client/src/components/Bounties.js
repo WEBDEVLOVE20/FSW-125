@@ -3,14 +3,15 @@ import './bounties.css'
 import AddBountyForm from './AddBountyForm.js'
 
 function Bounties(props){
-    const { firstName, lastName, bountyAmount, type, _id } = props
+    const { firstName, lastName, living, bountyAmount, type, _id } = props
     const [editToggle, setEditToggle] = useState(false)
 
     return (
         <div>
         { !editToggle ?
-        <>
+        <> 
             <h1>Name: { firstName } { lastName}</h1>
+            <h3>Status: {living ? "Alive" : "Deceased"}</h3>
             <h3>Bounty Price: ${ bountyAmount }</h3>
             <h3>Jedi or Sith: { type }</h3>
             <button
@@ -29,6 +30,7 @@ function Bounties(props){
             <AddBountyForm
                 firstName={firstName}
                 lastName={lastName}
+                living={living ? "Alive" : "Deceased"}
                 bountyAmount={bountyAmount}
                 type={type}
                 _id={_id}

@@ -49,16 +49,18 @@ function App() {
         />
         { 
           bounties.map(bounty => 
-            <Bounties 
+            {
+                return <Bounties 
             {...bounty} 
             key={bounty._id}
             firstName={bounty.firstName}
             lastName={bounty.lastName}
+            living={bounty.living}
             bountyAmount={bounty.bountyAmount}
             type={bounty.type}
             deleteBounty={deleteBounty}
             editBounty={editBounty}
-            />) 
+            />}) 
         }
         </div>
     )

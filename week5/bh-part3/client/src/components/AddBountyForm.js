@@ -3,7 +3,7 @@ import './add-bounty-form.css'
 
 function AddBountyForm(props){
 
-    const initInputs = { firstName: props.firstName || "", lastName: props.lastName || "", bountyAmount: props.bountyAmount || "", type: props.type || ""  }
+    const initInputs = { firstName: props.firstName || "", lastName: props.lastName || "", living: props.living || "", bountyAmount: props.bountyAmount || "", type: props.type || ""  }
     
     const [inputs, setInputs] = useState(initInputs)
 
@@ -13,7 +13,12 @@ function AddBountyForm(props){
     })
     
     const handleSubmit = ((e) => {
-        e.preventDefault()
+        e.preventDefault() 
+        if (inputs.living.toLowerCase() === "alive" ) {
+            inputs.living = true
+        } else {
+            inputs.living = false
+        }
         props.submit(inputs, props._id)
         setInputs(initInputs)
     })
@@ -34,6 +39,13 @@ function AddBountyForm(props){
                     value={inputs.lastName}
                     onChange={handleChange}
                     placeholder="Last Name"
+                />
+                <input
+                    type="text"
+                    name="living"
+                    value={inputs.living}
+                    onChange={handleChange}
+                    placeholder="Alive or Dead"
                 />
                 <input
                     type="number"
