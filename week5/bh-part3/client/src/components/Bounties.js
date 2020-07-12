@@ -7,7 +7,7 @@ function Bounties(props){
     const [editToggle, setEditToggle] = useState(false)
 
     return (
-        <div>
+        <div className="list-container">
         { !editToggle ?
         <> 
             <h1>Name: { firstName } { lastName}</h1>

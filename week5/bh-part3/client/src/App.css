@@ -1,6 +1,13 @@
 html {
-    background-color: rgb(29, 32, 32);
+    background-image: url("https://cdn.unifiedcommerce.com/content/product/large/079346033621.jpg");
+    background-position: center;
+    background-size: cover;
+    background-repeat: repeat;
     color: whitesmoke;
-    margin-right: 15%;
-    margin-left: 15%;
+    text-align: center;
+}
+
+.title {
+    color: black;
+    font-size: 60px;
 }

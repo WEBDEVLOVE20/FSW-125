@@ -43,6 +43,7 @@ function App() {
 
     return (
         <div>
+            <h1 className="title">Bounty Hunter Database</h1>
         <AddBountyForm 
             submit={addBounty}
             btnText="Add Bounty"
