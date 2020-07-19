@@ -13,7 +13,6 @@ function App() {
             .catch(err => console.log(err))
     })
     
-    
     const addEvent = ((newEvent) => {
         axios.post("http://localhost:8000/events", newEvent)
             .then(res => {
@@ -62,7 +61,7 @@ function App() {
             itemsNeeded={event.itemsNeeded}
             deleteEvent={deleteEvent}
             editEvent={editEvent}
-            />}) 
+            /> }) 
         }
         </div>
     )

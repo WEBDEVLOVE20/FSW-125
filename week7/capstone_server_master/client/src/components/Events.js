@@ -1,5 +1,7 @@
-import React, { useState } from 'react'
-import AddEvents from './AddEvents.js'
+import React, { useState } from 'react';
+import AddEvents from './AddEvents.js';
+import './events.css';
+
 
 function Events(props){
     const { event, description, completed, date, itemsNeeded, _id } = props
@@ -9,7 +11,7 @@ function Events(props){
         <div className="list-container">
         { !editToggle ?
         <> 
-            <h1>Event: { event }</h1>
+            <h1>{ event }</h1>
             <h3>Details: { description }</h3>
             <h3>Completed: {completed ? "Yes" : "No"}</h3>
             <h3>Date of Event: { date }</h3>
