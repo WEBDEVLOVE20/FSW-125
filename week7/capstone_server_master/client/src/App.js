@@ -11,7 +11,9 @@ function App() {
         axios.get("/events")
             .then(res => setEvents(res.data))
             .catch(err => console.log(err))
-            console.log(getEvents)
+            //.then(res => console.log(res.data))
+
+            console.log(getEvents);
     })
     
 
