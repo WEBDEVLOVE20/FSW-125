@@ -8,17 +8,14 @@ function App() {
     const [events, setEvents] = useState([])
 
     const getEvents = (() => {
-        axios.get("/events")
+        axios.get("http://localhost:8000/events")
             .then(res => setEvents(res.data))
             .catch(err => console.log(err))
-            //.then(res => console.log(res.data))
-
-            console.log(getEvents);
     })
     
-
+    
     const addEvent = ((newEvent) => {
-        axios.post("/events", newEvent)
+        axios.post("http://localhost:8000/events", newEvent)
             .then(res => {
                 setEvents(prevEvents => [...prevEvents, res.data])
             })
@@ -26,7 +23,7 @@ function App() {
     })
 
     const deleteEvent = ((eventId) => {
-        axios.delete(`/events/${eventId}`)
+        axios.delete(`http://localhost:8000/events/${eventId}`)
             .then(res => {
                 setEvents(prevEvents => prevEvents.filter(event => event._id !== eventId))
             })
@@ -34,7 +31,7 @@ function App() {
     })
 
     const editEvent = ((updates, eventId) => {
-        axios.put(`/events/${eventId}`, updates)
+        axios.put(`http://localhost:8000/events/${eventId}`, updates)
             .then(res => {
                 setEvents(prevEvents => prevEvents.map (event => event._id !== eventId ? event : res.data))
             })

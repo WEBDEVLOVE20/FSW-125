@@ -9,23 +9,23 @@ const events = [
         description: "Jamie's 12th birthday party.",
         completed: true,
         date: 06122020,
-        itemsNeeded: ["pizza", "cake", "cups", "streamers", "present"],
+        itemsNeeded: ["pizza, ", "cake, ", "cups, ", "streamers, ", "present"],
         _id: uuidv4()
     },
     {
-        event: "Forth of July Party",
-        description: "Brenda's Party on the 4th.",
+        event: "Cookout",
+        description: "Brenda's cookout",
         completed: true,
         date: 07042020,
-        itemsNeeded: ["drinks", "cups", "fireworks"],
+        itemsNeeded: ["drinks, ", "cups, ", "burgers"],
         _id: uuidv4()
     },
     {
         event: "Baby Shower",
-        description: "Jill's baby shower for baby William.",
+        description: "Jill's baby shower for baby Sam.",
         completed: false,
         date: 08092020,
-        itemsNeeded: ["cupcakes", "present", "card"],
+        itemsNeeded: ["cupcakes, ", "present, ", "card"],
         _id: uuidv4()
     },
     {
@@ -33,7 +33,7 @@ const events = [
         description: "Take car to chevy to have inspected.",
         completed: false,
         date: 09132020,
-        itemsNeeded: ["registration", "insurance"],
+        itemsNeeded: ["registration, ", "insurance"],
         _id: uuidv4()
     }
 ];
@@ -41,13 +41,14 @@ const events = [
 //Get & Post
 trackEvents.route("/")
     .get((req, res) => {
-    res.send(events)
+        res.status(200)
+        res.send(events)
     })
     .post((req, res) => {
     const newEvent = req.body
     newEvent._id = uuidv4()
     events.push(newEvent)
-    res.send(newEvent)
+    res.status(201).send(newEvent)
 });
 
 //Get One
@@ -56,9 +57,10 @@ trackEvents.get("/:eventId", (req, res, next) => {
     const foundEvent = events.find(event => event._id === eventId)
     if(!foundEvent){
         const error = new Error(`The item with id ${eventId} was not found.`)
+        res.status(500)
         return next(error)
     }
-    res.send(foundEvent)
+    res.status(200).send(foundEvent)
 })
 
 //Delete
@@ -68,7 +70,7 @@ trackEvents.delete("/:eventId", (req, res) => {
     event._id = uuidv4()
     const eventIndex = events.findIndex(event => event._id === eventId)
     events.splice(eventIndex, 1)
-    res.send("Event was deleted!")
+    res.status(201).send("Event was deleted!")
 })
 
 //Update - Put
@@ -78,7 +80,7 @@ trackEvents.put("/:eventId", (req, res) => {
     event._id = uuidv4()
     const eventIndex = events.findIndex(event => event._id === eventId)
     const updatedEvent = Object.assign(events[eventIndex], req.body) 
-    res.send(updatedEvent)
+    res.status(201).send(updatedEvent)
 })
 
 module.exports = trackEvents;
